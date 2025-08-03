@@ -2,7 +2,8 @@ import express from "express";
 import WebSocket from "ws";
 import cors from "cors";
 import fs from "fs";
-import { Architect, Trainer } from "synaptic";
+import pkg from "synaptic";
+const { Architect, Trainer } = pkg;
 
 // ========== CONFIG ==========
 const HANDSHAKE = [
