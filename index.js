@@ -1,1 +1,177 @@
-const _0x45d1d6=_0x5f10;(function(_0x17da8b,_0xe52dab){const _0x52f54d=_0x5f10,_0x24812a=_0x17da8b();while(!![]){try{const _0x57410e=-parseInt(_0x52f54d(0x125))/0x1+-parseInt(_0x52f54d(0x114))/0x2+parseInt(_0x52f54d(0x10e))/0x3+parseInt(_0x52f54d(0x12b))/0x4*(parseInt(_0x52f54d(0x112))/0x5)+-parseInt(_0x52f54d(0xf8))/0x6+parseInt(_0x52f54d(0x118))/0x7+-parseInt(_0x52f54d(0x100))/0x8*(-parseInt(_0x52f54d(0x101))/0x9);if(_0x57410e===_0xe52dab)break;else _0x24812a['push'](_0x24812a['shift']());}catch(_0x3dc066){_0x24812a['push'](_0x24812a['shift']());}}}(_0x23c5,0xdf7d7));import _0x4a4b55 from'express';import _0x416b34 from'ws';import _0x4d8d60 from'cors';function _0x23c5(){const _0x2c61b0=['Xỉu','split','62AEDD3AB10F6AC303898BB1763937212B4BD5DB6B07BB1DC9281391282AAA2BFA79DB7423B5F707974CDB0F327C0B92FAE80796A2DE20FFDB578FEE1459861E5B417D99CE8B6F91EFBFC8A19511F4A248E598A3695190EF7F99E7140D5BF51A519119429DC0A38E644ED8C14423F39411D4CC88C675A8E3989144BCB1586C73','open','readFileSync','length','error','train','Tài','map','json','3475977TWXWNm','slice','log','get','125SNBXrd','trim','2463364wDAcYm','chưa\x20có\x20dữ\x20liệu','Perceptron','push','11482891PprneE','Cập\x20nhật\x20dữ\x20liệu:','Đã\x20load\x20','Không\x20tìm\x20thấy\x20pattern.txt,\x20sẽ\x20huấn\x20luyện\x20với\x20dữ\x20liệu\x20rỗng','Join\x20room\x20taixiuMd5Plugin\x20sent','Tai','stringify','API\x20server\x20running\x20at\x20http://localhost:','close','object','utf8','Xiu','shift','506615zLCLXL','send','WebSocket\x20closed,\x20reconnecting...','Thống\x20kê:\x20Tài\x20=\x20','\x20|\x20Xỉu\x20=\x20','./pattern.txt','35576rIgqYw','250165605115165151486041589641432','691e2414a8aa35421716e5b014f768fa','Không\x20đủ\x20dữ\x20liệu\x20để\x20huấn\x20luyện\x20model','taixiuMd5Plugin','7785222WhiJqy','MiniGame','isArray','env','Ledat1907@','syncho01','Chưa\x20đủ\x20dữ\x20liệu','Đã\x20huấn\x20luyện\x20mô\x20hình\x20Synaptic\x20từ\x20pattern.txt','8kvUXsr','8368443qmzqov','42.118.191.0'];_0x23c5=function(){return _0x2c61b0;};return _0x23c5();}import _0xd5aef2 from'fs';import{Architect,Trainer}from'synaptic';const HANDSHAKE=[0x1,_0x45d1d6(0xf9),'syncho01',_0x45d1d6(0xfc),{'signature':_0x45d1d6(0x105),'info':{'cs':_0x45d1d6(0x12d),'phone':'84968239523','ipAddress':_0x45d1d6(0x102),'isMerchant':![],'userId':'0a86bd85-4d3e-45fe-8f6c-63b11182183e','deviceId':_0x45d1d6(0x12c),'isMktAccount':![],'username':_0x45d1d6(0xfd),'timestamp':0x1986ab04599},'pid':0x4}],patternFile=_0x45d1d6(0x12a);let rawPattern='';try{rawPattern=_0xd5aef2[_0x45d1d6(0x107)](patternFile,_0x45d1d6(0x122))[_0x45d1d6(0x113)](),console[_0x45d1d6(0x110)](_0x45d1d6(0x11a)+rawPattern[_0x45d1d6(0x108)]+'\x20ký\x20tự\x20từ\x20pattern.txt');}catch(_0x1d1b8e){console[_0x45d1d6(0x110)](_0x45d1d6(0x11b)),rawPattern='';}function createDataset(_0x332ace,_0x347745=0x5){const _0xaad8dc=_0x45d1d6,_0x277cf0=[],_0x4facc1=_0x249261=>_0x249261==='T'?0x1:0x0;for(let _0xdfa9a1=0x0;_0xdfa9a1<=_0x332ace[_0xaad8dc(0x108)]-_0x347745;_0xdfa9a1++){const _0x44d169=_0x332ace[_0xaad8dc(0x10f)](_0xdfa9a1,_0xdfa9a1+_0x347745),_0x541a2b=_0x44d169['slice'](0x0,_0x347745-0x1)[_0xaad8dc(0x104)]('')[_0xaad8dc(0x10c)](_0x4facc1),_0x22d584=_0x4facc1(_0x44d169[_0x347745-0x1]);_0x277cf0[_0xaad8dc(0x117)]({'input':_0x541a2b,'output':[_0x22d584]});}return _0x277cf0;}function _0x5f10(_0x3dc5f9,_0x4a95f8){const _0x23c5b0=_0x23c5();return _0x5f10=function(_0x5f1078,_0x4b0855){_0x5f1078=_0x5f1078-0xf7;let _0x234298=_0x23c5b0[_0x5f1078];return _0x234298;},_0x5f10(_0x3dc5f9,_0x4a95f8);}let model=null;if(rawPattern[_0x45d1d6(0x108)]>=0xa){const dataset=createDataset(rawPattern,0x5);model=new Architect[(_0x45d1d6(0x116))](0x4,0x8,0x1);const trainer=new Trainer(model);trainer[_0x45d1d6(0x10a)](dataset,{'rate':0.1,'iterations':0x1388,'shuffle':!![],'log':0x3e8}),console['log'](_0x45d1d6(0xff));}else console[_0x45d1d6(0x110)](_0x45d1d6(0x12e));function predict(_0x379e93){const _0x3eb1e5=_0x45d1d6;if(!model||_0x379e93[_0x3eb1e5(0x108)]<0x4)return _0x3eb1e5(0xfe);const _0x1135a2=_0x379e93[_0x3eb1e5(0x10f)](-0x4)[_0x3eb1e5(0x10c)](_0x10f38c=>_0x10f38c==='T'?0x1:0x0),_0x3caa77=model['activate'](_0x1135a2);return _0x3caa77[0x0]>0.5?_0x3eb1e5(0x10b):'Xỉu';}let lastResult=null,history=[],thongKe={'Tai':0x0,'Xiu':0x0};function handleResult(_0x3151bb){const _0x39ce5f=_0x45d1d6,_0x254bdf=_0x3151bb['rS']['match'](/#(\d+)/);if(!_0x254bdf)return;const _0x84cf13=parseInt(_0x254bdf[0x1]),_0x45e758=_0x3151bb['d1'],_0x46d0fb=_0x3151bb['d2'],_0x121bfe=_0x3151bb['d3'],_0x5b9a26=_0x45e758+_0x46d0fb+_0x121bfe,_0xc50d8e=_0x5b9a26>=0xb?_0x39ce5f(0x10b):_0x39ce5f(0x103);history[_0x39ce5f(0x117)](_0xc50d8e==='Tài'?'T':'X');if(history[_0x39ce5f(0x108)]>0x3e8)history[_0x39ce5f(0x124)]();const _0xcf1256=predict(history);lastResult={'phien':_0x84cf13,'xuc_xac_1':_0x45e758,'xuc_xac_2':_0x46d0fb,'xuc_xac_3':_0x121bfe,'tong':_0x5b9a26,'ket_qua':_0xc50d8e,'du_doan':_0xcf1256},console['log'](_0x39ce5f(0x119),lastResult);if(_0xcf1256!==_0x39ce5f(0xfe)&&_0xcf1256===_0xc50d8e){if(_0xc50d8e===_0x39ce5f(0x10b))thongKe[_0x39ce5f(0x11d)]++;else thongKe[_0x39ce5f(0x123)]++;}console[_0x39ce5f(0x110)](_0x39ce5f(0x128)+thongKe[_0x39ce5f(0x11d)]+_0x39ce5f(0x129)+thongKe[_0x39ce5f(0x123)]);}function startPing(_0x539768){setInterval(()=>{const _0xadd914=_0x5f10;_0x539768['send'](JSON[_0xadd914(0x11e)]([0x7,_0xadd914(0xf9),0x8,Date['now']()]));},0x1388);}function connectWS(){const _0x3a050b=_0x45d1d6,_0x1fe623=new _0x416b34(WS_URL);_0x1fe623['on'](_0x3a050b(0x106),()=>{console['log']('WebSocket\x20connected'),_0x1fe623['send'](JSON['stringify'](HANDSHAKE)),setTimeout(()=>{const _0x461399=_0x5f10;_0x1fe623[_0x461399(0x126)](JSON[_0x461399(0x11e)]([0x6,_0x461399(0xf9),_0x461399(0xf7),{'cmd':0x451}])),console[_0x461399(0x110)](_0x461399(0x11c));},0x3e8),startPing(_0x1fe623);}),_0x1fe623['on']('message',_0xb03010=>{const _0x356192=_0x3a050b;try{const _0x55f419=JSON['parse'](_0xb03010);if(Array[_0x356192(0xfa)](_0x55f419)&&typeof _0x55f419[0x1]===_0x356192(0x121)){if(_0x55f419[0x1]['cmd']===0x44f)handleResult(_0x55f419[0x1]);}}catch{}}),_0x1fe623['on'](_0x3a050b(0x120),()=>{const _0x31d652=_0x3a050b;console[_0x31d652(0x110)](_0x31d652(0x127)),setTimeout(connectWS,0x1388);}),_0x1fe623['on'](_0x3a050b(0x109),_0x541d46=>{console['log']('WebSocket\x20error:',_0x541d46);});}connectWS();const app=_0x4a4b55();app['use'](_0x4d8d60()),app[_0x45d1d6(0x111)]('/api/ketqua',(_0x54a2d8,_0x573bb1)=>{const _0x23f863=_0x45d1d6;if(lastResult)_0x573bb1[_0x23f863(0x10d)](lastResult);else _0x573bb1[_0x23f863(0x10d)]({'status':_0x23f863(0x115)});});const PORT=process[_0x45d1d6(0xfb)]['PORT']||0x2710;app['listen'](PORT,()=>console[_0x45d1d6(0x110)](_0x45d1d6(0x11f)+PORT));
+import express from "express";
+import WebSocket from "ws";
+import cors from "cors";
+import fs from "fs";
+import { Architect, Trainer } from "synaptic";
+
+// ========== CONFIG ==========
+const HANDSHAKE = [
+  1,
+  "MiniGame",
+  "syncho01",
+  "Ledat1907@",
+  {
+    signature:
+      "62AEDD3AB10F6AC303898BB1763937212B4BD5DB6B07BB1DC9281391282AAA2BFA79DB7423B5F707974CDB0F327C0B92FAE80796A2DE20FFDB578FEE1459861E5B417D99CE8B6F91EFBFC8A19511F4A248E598A3695190EF7F99E7140D5BF51A519119429DC0A38E644ED8C14423F39411D4CC88C675A8E3989144BCB1586C73",
+    info: {
+      cs: "691e2414a8aa35421716e5b014f768fa",
+      phone: "84968239523",
+      ipAddress: "42.118.191.0",
+      isMerchant: false,
+      userId: "0a86bd85-4d3e-45fe-8f6c-63b11182183e",
+      deviceId: "250165605115165151486041589641432",
+      isMktAccount: false,
+      username: "syncho01",
+      timestamp: 1754136593817,
+    },
+    pid: 4,
+  },
+];
+
+// ========== ĐỌC FILE PATTERN ==========
+const patternFile = "./pattern.txt";
+let rawPattern = "";
+try {
+  rawPattern = fs.readFileSync(patternFile, "utf8").trim();
+  console.log(`Đã load ${rawPattern.length} ký tự từ pattern.txt`);
+} catch (e) {
+  console.log("Không tìm thấy pattern.txt, sẽ huấn luyện với dữ liệu rỗng");
+  rawPattern = "";
+}
+
+// ========== TẠO DATASET TỪ PATTERN ==========
+function createDataset(pattern, seqLen = 5) {
+  const dataset = [];
+  const convert = (ch) => (ch === "T" ? 1 : 0);
+  for (let i = 0; i <= pattern.length - seqLen; i++) {
+    const seq = pattern.slice(i, i + seqLen);
+    const inputs = seq.slice(0, seqLen - 1).split("").map(convert);
+    const target = convert(seq[seqLen - 1]);
+    dataset.push({ input: inputs, output: [target] });
+  }
+  return dataset;
+}
+
+// ========== HUẤN LUYỆN MÔ HÌNH SYNAPTIC ==========
+let model = null;
+if (rawPattern.length >= 10) {
+  const dataset = createDataset(rawPattern, 5);
+  model = new Architect.Perceptron(4, 8, 1);
+  const trainer = new Trainer(model);
+  trainer.train(dataset, {
+    rate: 0.1,
+    iterations: 5000,
+    shuffle: true,
+    log: 1000,
+  });
+  console.log("Đã huấn luyện mô hình Synaptic từ pattern.txt");
+} else {
+  console.log("Không đủ dữ liệu để huấn luyện model");
+}
+
+// ========== DỰ ĐOÁN BẰNG MÔ HÌNH ==========
+function predict(history) {
+  if (!model || history.length < 4) return "Chưa đủ dữ liệu";
+
+  const recent = history.slice(-4).map((x) => (x === "T" ? 1 : 0));
+  const output = model.activate(recent);
+  return output[0] > 0.5 ? "Tài" : "Xỉu";
+}
+
+// ========== BIẾN TOÀN CỤC ==========
+let lastResult = null;
+let history = [];
+let thongKe = { Tai: 0, Xiu: 0 };
+
+// ========== XỬ LÝ KHI CÓ KẾT QUẢ MỚI ==========
+function handleResult(data) {
+  const match = data.rS.match(/#(\d+)/);
+  if (!match) return;
+
+  const phien = parseInt(match[1]);
+  const d1 = data.d1,
+    d2 = data.d2,
+    d3 = data.d3;
+  const tong = d1 + d2 + d3;
+  const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
+
+  history.push(ket_qua === "Tài" ? "T" : "X");
+  if (history.length > 1000) history.shift();
+
+  const du_doan = predict(history);
+
+  lastResult = {
+    phien,
+    xuc_xac_1: d1,
+    xuc_xac_2: d2,
+    xuc_xac_3: d3,
+    tong,
+    ket_qua,
+    du_doan,
+  };
+
+  console.log("Cập nhật dữ liệu:", lastResult);
+
+  // Thống kê đúng/sai
+  if (du_doan !== "Chưa đủ dữ liệu" && du_doan === ket_qua) {
+    if (ket_qua === "Tài") thongKe.Tai++;
+    else thongKe.Xiu++;
+  }
+  console.log(`Thống kê: Tài = ${thongKe.Tai} | Xỉu = ${thongKe.Xiu}`);
+}
+
+// ========== WEBSOCKET ==========
+function startPing(ws) {
+  setInterval(() => {
+    ws.send(JSON.stringify([7, "MiniGame", 8, Date.now()]));
+  }, 5000);
+}
+
+function connectWS() {
+  const ws = new WebSocket(WS_URL);
+
+  ws.on("open", () => {
+    console.log("WebSocket connected");
+    ws.send(JSON.stringify(HANDSHAKE));
+
+    setTimeout(() => {
+      ws.send(JSON.stringify([6, "MiniGame", "taixiuMd5Plugin", { cmd: 1105 }]));
+      console.log("Join room taixiuMd5Plugin sent");
+    }, 1000);
+
+    startPing(ws);
+  });
+
+  ws.on("message", (msg) => {
+    try {
+      const data = JSON.parse(msg);
+      if (Array.isArray(data) && typeof data[1] === "object") {
+        if (data[1].cmd === 1103) handleResult(data[1]);
+      }
+    } catch {}
+  });
+
+  ws.on("close", () => {
+    console.log("WebSocket closed, reconnecting...");
+    setTimeout(connectWS, 5000);
+  });
+
+  ws.on("error", (err) => {
+    console.log("WebSocket error:", err);
+  });
+}
+connectWS();
+
+// ========== API EXPRESS ==========
+const app = express();
+app.use(cors());
+
+app.get("/api/ketqua", (req, res) => {
+  if (lastResult) res.json(lastResult);
+  else res.json({ status: "chưa có dữ liệu" });
+});
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () =>
+  console.log(`API server running at http://localhost:${PORT}`)
+);
