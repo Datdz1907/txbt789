@@ -1,17 +1,27 @@
+# predict5.py
 import sys
 import joblib
+import numpy as np
+from sklearn.linear_model import SGDClassifier
+import os
 
-# Load model đã train từ file model5.pkl
-model = joblib.load("model5.pkl")
+def encode(seq):
+    # Chuyển TX thành số: T=1, X=0
+    return [1 if ch == "T" else 0 for ch in seq]
 
-# Nhận chuỗi 5 ký tự từ tham số dòng lệnh
-seq = sys.argv[1].strip().upper()  # Ví dụ: "TXTTX"
+MODEL_FILE = "model.pkl"
 
-# Chuyển thành vector số (T=1, X=0)
-X = [[1 if c == "T" else 0 for c in seq]]
+seq = sys.argv[1]
 
-# Dự đoán
-pred = model.predict(X)[0]
+# Load hoặc tạo model
+if os.path.exists(MODEL_FILE):
+    model = joblib.load(MODEL_FILE)
+else:
+    model = SGDClassifier(loss="log_loss", max_iter=1000, tol=1e-3)
 
-# In kết quả
-print("Tài" if pred == 1 else "Xỉu")
+X = np.array([encode(seq)])
+try:
+    pred = model.predict(X)[0]
+    print("Tài" if pred == 1 else "Xỉu")
+except Exception:
+    print("Chưa đủ dữ liệu")
