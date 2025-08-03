@@ -6,6 +6,8 @@ import pkg from "synaptic";
 const { Architect, Trainer } = pkg;
 
 // ========== CONFIG ==========
+const WS_URL =
+  "wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==";
 const HANDSHAKE = [
   1,
   "MiniGame",
