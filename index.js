@@ -36,6 +36,9 @@ let lastResult = null;
 let lichSuKetQua = [];
 let thongKeChiTiet = { dung: 0, sai: 0 };
 
+// ===== ĐƯỜNG DẪN PYTHON TRONG VENV =====
+const PYTHON = ".venv/bin/python3";
+
 // ===== DỰ ĐOÁN BẰNG MODEL 5 KÝ TỰ =====
 function duDoanBangModel(history) {
   if (history.length < 5) {
@@ -43,11 +46,22 @@ function duDoanBangModel(history) {
   }
   const seq = history.slice(-5).join("");
   try {
-    const output = execSync(`python3 predict5.py ${seq}`).toString().trim();
+    const output = execSync(`${PYTHON} predict5.py ${seq}`).toString().trim();
     return { duDoan: output, method: "model" };
   } catch (err) {
     console.error("Lỗi khi gọi Python:", err);
     return { duDoan: "Chưa đủ dữ liệu", method: "model" };
+  }
+}
+
+// ===== CẬP NHẬT MODEL (TỰ HỌC) =====
+function capNhatModel(history, label) {
+  if (history.length < 5) return;
+  const seq = history.slice(-5).join("");
+  try {
+    execSync(`${PYTHON} update_model.py ${seq} ${label}`);
+  } catch (err) {
+    console.error("Lỗi khi cập nhật model:", err);
   }
 }
 
@@ -78,6 +92,9 @@ function handleResult(data) {
     else thongKeChiTiet.sai++;
   }
 
+  // Tự học: cập nhật model bằng kết quả thật
+  capNhatModel(lichSuKetQua, ket_qua === "Tài" ? 1 : 0);
+
   lastResult = {
     phien,
     xuc_xac_1: d1,
@@ -94,19 +111,6 @@ function handleResult(data) {
   console.log(
     `Thống kê đúng/sai: Đúng = ${thongKeChiTiet.dung} | Sai = ${thongKeChiTiet.sai}`
   );
-
-  // === PHẦN TỰ HỌC THÊM VÀO ===
-  if (lichSuKetQua.length >= 5) {
-    const seq = lichSuKetQua.slice(-5).join("");
-    const label = ket_qua === "Tài" ? 1 : 0;
-    try {
-      execSync(`python3 update_model.py ${seq} ${label}`);
-      console.log(`Đã cập nhật model với dữ liệu: ${seq} -> ${ket_qua}`);
-    } catch (e) {
-      console.error("Lỗi khi cập nhật model:", e);
-    }
-  }
-  // ============================
 }
 
 // ===== WEBSOCKET =====
