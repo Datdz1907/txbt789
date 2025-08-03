@@ -1,1 +1,161 @@
-const _0x1f6805=_0x5f2b;(function(_0x545435,_0x232559){const _0x1664b3=_0x5f2b,_0x258611=_0x545435();while(!![]){try{const _0x325953=parseInt(_0x1664b3(0x10f))/0x1*(-parseInt(_0x1664b3(0x112))/0x2)+-parseInt(_0x1664b3(0x144))/0x3*(-parseInt(_0x1664b3(0x13e))/0x4)+-parseInt(_0x1664b3(0x125))/0x5+-parseInt(_0x1664b3(0x141))/0x6*(-parseInt(_0x1664b3(0x110))/0x7)+-parseInt(_0x1664b3(0x10c))/0x8*(-parseInt(_0x1664b3(0x130))/0x9)+-parseInt(_0x1664b3(0x10a))/0xa*(parseInt(_0x1664b3(0x124))/0xb)+parseInt(_0x1664b3(0x136))/0xc*(-parseInt(_0x1664b3(0x111))/0xd);if(_0x325953===_0x232559)break;else _0x258611['push'](_0x258611['shift']());}catch(_0x1f9119){_0x258611['push'](_0x258611['shift']());}}}(_0x3a5b,0xb5725));import _0x348fec from'express';import _0x1d6ca2 from'ws';import _0x39eb92 from'cors';import _0x3369f3 from'fs';function _0x5f2b(_0x1dbb97,_0x361b05){const _0x3a5beb=_0x3a5b();return _0x5f2b=function(_0x5f2b1e,_0x356d74){_0x5f2b1e=_0x5f2b1e-0x109;let _0x2a7693=_0x3a5beb[_0x5f2b1e];return _0x2a7693;},_0x5f2b(_0x1dbb97,_0x361b05);}const WS_URL=_0x1f6805(0x133),HANDSHAKE=[0x1,_0x1f6805(0x11b),_0x1f6805(0x116),_0x1f6805(0x129),{'signature':_0x1f6805(0x11f),'info':{'cs':_0x1f6805(0x119),'phone':_0x1f6805(0x11a),'ipAddress':_0x1f6805(0x13d),'isMerchant':![],'userId':_0x1f6805(0x11d),'deviceId':_0x1f6805(0x118),'isMktAccount':![],'username':_0x1f6805(0x116),'timestamp':0x1986ab04599},'pid':0x4}];let patternData='';try{patternData=_0x3369f3['readFileSync']('pattern.txt','utf8')['trim'](),console['log'](_0x1f6805(0x139)+patternData[_0x1f6805(0x12e)]+_0x1f6805(0x115));}catch(_0xf95a53){console['error'](_0x1f6805(0x117),_0xf95a53);}function _0x3a5b(){const _0x5719df=['message','582tfrxGm','shift','3008770CXcZIP','Tài','536aZmZfu','WebSocket\x20closed,\x20reconnecting\x20in\x205s...','taixiuMd5Plugin','1xBpThO','469ZMFJKT','39GVmFqb','2118764afYxXD','Join\x20room\x20taixiuMd5Plugin\x20sent','object','\x20ký\x20tự','syncho01','Không\x20thể\x20đọc\x20pattern.txt:','250165605115165151486041589641432','691e2414a8aa35421716e5b014f768fa','84968239523','MiniGame','Xiu','0a86bd85-4d3e-45fe-8f6c-63b11182183e','join','62AEDD3AB10F6AC303898BB1763937212B4BD5DB6B07BB1DC9281391282AAA2BFA79DB7423B5F707974CDB0F327C0B92FAE80796A2DE20FFDB578FEE1459861E5B417D99CE8B6F91EFBFC8A19511F4A248E598A3695190EF7F99E7140D5BF51A519119429DC0A38E644ED8C14423F39411D4CC88C675A8E3989144BCB1586C73','Tai','stringify','push','use','11cvbKYx','5889615SrUVtH','log','close','slice','Ledat1907@','isArray','API\x20server\x20running\x20at\x20http://localhost:','env','Thống\x20kê:\x20Tài\x20=\x20','length','PORT','182259UNiRjQ','listen','match','wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==','Chưa\x20đủ\x20dữ\x20liệu','/api/ketqua','118860kVLanB','error','none','Đã\x20load\x20thành\x20công\x20pattern.txt\x20với\x20','send','Xỉu','WebSocket\x20connected','42.118.191.0','12388QSTqYS','Cập\x20nhật\x20dữ\x20liệu:','pattern','121206RftAiO','json'];_0x3a5b=function(){return _0x5719df;};return _0x3a5b();}let lastResult=null,lichSuKetQua=[],thongKe={'Tai':0x0,'Xiu':0x0};function duDoanTheoPattern(_0x57b794){const _0x276401=_0x1f6805;if(_0x57b794[_0x276401(0x12e)]<0x4||!patternData)return{'duDoan':'Chưa\x20đủ\x20dữ\x20liệu','method':_0x276401(0x138)};const _0x194e40=_0x57b794[_0x276401(0x128)](-0x4)[_0x276401(0x11e)](''),_0x1e64ce={'T':0x0,'X':0x0};for(let _0x2af3a=0x0;_0x2af3a<=patternData[_0x276401(0x12e)]-0x5;_0x2af3a++){if(patternData['slice'](_0x2af3a,_0x2af3a+0x4)===_0x194e40){const _0x5aa38e=patternData[_0x2af3a+0x4];(_0x5aa38e==='T'||_0x5aa38e==='X')&&_0x1e64ce[_0x5aa38e]++;}}if(_0x1e64ce['T']===0x0&&_0x1e64ce['X']===0x0)return{'duDoan':_0x276401(0x134),'method':'none'};const _0x5a2cf3=_0x1e64ce['T']>_0x1e64ce['X']?'Tài':_0x1e64ce['X']>_0x1e64ce['T']?_0x276401(0x13b):_0x276401(0x134);return{'duDoan':_0x5a2cf3,'method':_0x276401(0x140)};}function handleResult(_0x2fc0dc){const _0x1f90e7=_0x1f6805,_0x1b205b=_0x2fc0dc['rS'],_0x40f7c5=_0x1b205b[_0x1f90e7(0x132)](/#(\d+)/);if(!_0x40f7c5)return;const _0x46c509=parseInt(_0x40f7c5[0x1]),_0x9ea1ac=_0x2fc0dc['d1'],_0x26d7c5=_0x2fc0dc['d2'],_0x49b6dd=_0x2fc0dc['d3'],_0x3b1e48=_0x9ea1ac+_0x26d7c5+_0x49b6dd,_0x375dad=_0x3b1e48>=0xb?'Tài':'Xỉu';lichSuKetQua[_0x1f90e7(0x122)](_0x375dad===_0x1f90e7(0x10b)?'T':'X');if(lichSuKetQua[_0x1f90e7(0x12e)]>0x3e8)lichSuKetQua[_0x1f90e7(0x109)]();const {duDoan:_0x527bf1,method:_0xf842dd}=duDoanTheoPattern(lichSuKetQua);lastResult={'phien':_0x46c509,'xuc_xac_1':_0x9ea1ac,'xuc_xac_2':_0x26d7c5,'xuc_xac_3':_0x49b6dd,'tong':_0x3b1e48,'ket_qua':_0x375dad,'du_doan':_0x527bf1,'method':_0xf842dd},console[_0x1f90e7(0x126)](_0x1f90e7(0x13f),lastResult);if(_0x527bf1!==_0x1f90e7(0x134)&&_0x375dad===_0x527bf1){if(_0x375dad==='Tài')thongKe[_0x1f90e7(0x120)]++;else thongKe[_0x1f90e7(0x11c)]++;}console['log'](_0x1f90e7(0x12d)+thongKe[_0x1f90e7(0x120)]+'\x20|\x20Xỉu\x20=\x20'+thongKe[_0x1f90e7(0x11c)]);}function startPing(_0x239139){setInterval(()=>{const _0x45d514=_0x5f2b,_0x3131ed=[0x7,_0x45d514(0x11b),0x8,Date['now']()];_0x239139[_0x45d514(0x13a)](JSON[_0x45d514(0x121)](_0x3131ed));},0x1388);}function connectWS(){const _0x30d5c6=_0x1f6805,_0x116fc3=new _0x1d6ca2(WS_URL);_0x116fc3['on']('open',()=>{const _0x261cd4=_0x5f2b;console[_0x261cd4(0x126)](_0x261cd4(0x13c)),_0x116fc3[_0x261cd4(0x13a)](JSON['stringify'](HANDSHAKE)),setTimeout(()=>{const _0x1cbd36=_0x261cd4,_0x4ffa2a=[0x6,_0x1cbd36(0x11b),_0x1cbd36(0x10e),{'cmd':0x451}];_0x116fc3[_0x1cbd36(0x13a)](JSON[_0x1cbd36(0x121)](_0x4ffa2a)),console['log'](_0x1cbd36(0x113));},0x3e8),startPing(_0x116fc3);}),_0x116fc3['on'](_0x30d5c6(0x143),_0x20a899=>{const _0x5095e2=_0x30d5c6;try{const _0x445cac=JSON['parse'](_0x20a899);Array[_0x5095e2(0x12a)](_0x445cac)&&typeof _0x445cac[0x1]===_0x5095e2(0x114)&&(_0x445cac[0x1]['cmd']===0x44f&&handleResult(_0x445cac[0x1]));}catch{}}),_0x116fc3['on'](_0x30d5c6(0x127),()=>{const _0x4cd310=_0x30d5c6;console[_0x4cd310(0x126)](_0x4cd310(0x10d)),setTimeout(connectWS,0x1388);}),_0x116fc3['on'](_0x30d5c6(0x137),_0x1e65e6=>{const _0x40debc=_0x30d5c6;console[_0x40debc(0x126)]('WebSocket\x20error:',_0x1e65e6);});}connectWS();const app=_0x348fec();app[_0x1f6805(0x123)](_0x39eb92()),app['get'](_0x1f6805(0x135),(_0x28025e,_0x8e30b3)=>{const _0x4f16e8=_0x1f6805;lastResult?_0x8e30b3[_0x4f16e8(0x142)](lastResult):_0x8e30b3[_0x4f16e8(0x142)]({'status':'chưa\x20có\x20dữ\x20liệu'});});const PORT=process[_0x1f6805(0x12c)][_0x1f6805(0x12f)]||0x2af8;app[_0x1f6805(0x131)](PORT,()=>{const _0x404cc7=_0x1f6805;console[_0x404cc7(0x126)](_0x404cc7(0x12b)+PORT);});
+import express from "express";
+import WebSocket from "ws";
+import cors from "cors";
+import fs from "fs";
+import { execSync } from "child_process";
+
+// ===== CONFIG =====
+const WS_URL =
+  "wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==";
+
+const HANDSHAKE = [
+  1,
+  "MiniGame",
+  "syncho01",
+  "Ledat1907@",
+  {
+    signature:
+      "62AEDD3AB10F6AC303898BB1763937212B4BD5DB6B07BB1DC9281391282AAA2BFA79DB7423B5F707974CDB0F327C0B92FAE80796A2DE20FFDB578FEE1459861E5B417D99CE8B6F91EFBFC8A19511F4A248E598A3695190EF7F99E7140D5BF51A519119429DC0A38E644ED8C14423F39411D4CC88C675A8E3989144BCB1586C73",
+    info: {
+      cs: "691e2414a8aa35421716e5b014f768fa",
+      phone: "84968239523",
+      ipAddress: "42.118.191.0",
+      isMerchant: false,
+      userId: "0a86bd85-4d3e-45fe-8f6c-63b11182183e",
+      deviceId: "250165605115165151486041589641432",
+      isMktAccount: false,
+      username: "syncho01",
+      timestamp: 1754136593817,
+    },
+    pid: 4,
+  },
+];
+
+// ===== BIẾN LƯU =====
+let lastResult = null;
+let lichSuKetQua = [];
+let thongKeChiTiet = { dung: 0, sai: 0 };
+
+// ===== DỰ ĐOÁN BẰNG MODEL 5 KÝ TỰ =====
+function duDoanBangModel(history) {
+  if (history.length < 5) {
+    return { duDoan: "Chưa đủ dữ liệu", method: "model" };
+  }
+  const seq = history.slice(-5).join("");
+  try {
+    const output = execSync(`python3 predict5.py ${seq}`).toString().trim();
+    return { duDoan: output, method: "model" };
+  } catch (err) {
+    console.error("Lỗi khi gọi Python:", err);
+    return { duDoan: "Chưa đủ dữ liệu", method: "model" };
+  }
+}
+
+// ===== XỬ LÝ KẾT QUẢ =====
+function handleResult(data) {
+  const rS = data.rS;
+  const match = rS.match(/#(\d+)/);
+  if (!match) return;
+
+  const phien = parseInt(match[1]);
+  const d1 = data.d1;
+  const d2 = data.d2;
+  const d3 = data.d3;
+  const tong = d1 + d2 + d3;
+  const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
+
+  // Lưu lịch sử
+  lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
+  if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
+
+  // Dự đoán chỉ bằng model
+  const { duDoan, method } = duDoanBangModel(lichSuKetQua);
+
+  // Kiểm tra đúng/sai
+  const dung = duDoan !== "Chưa đủ dữ liệu" && duDoan === ket_qua;
+  if (duDoan !== "Chưa đủ dữ liệu") {
+    if (dung) thongKeChiTiet.dung++;
+    else thongKeChiTiet.sai++;
+  }
+
+  lastResult = {
+    phien,
+    xuc_xac_1: d1,
+    xuc_xac_2: d2,
+    xuc_xac_3: d3,
+    tong,
+    ket_qua,
+    du_doan: duDoan,
+    method,
+    dudoan_dung: dung,
+  };
+
+  console.log("Cập nhật dữ liệu:", lastResult);
+  console.log(
+    `Thống kê đúng/sai: Đúng = ${thongKeChiTiet.dung} | Sai = ${thongKeChiTiet.sai}`
+  );
+}
+
+// ===== WEBSOCKET =====
+function startPing(ws) {
+  setInterval(() => {
+    const pingMsg = [7, "MiniGame", 8, Date.now()];
+    ws.send(JSON.stringify(pingMsg));
+  }, 5000);
+}
+
+function connectWS() {
+  const ws = new WebSocket(WS_URL);
+
+  ws.on("open", () => {
+    console.log("WebSocket connected");
+    ws.send(JSON.stringify(HANDSHAKE));
+
+    setTimeout(() => {
+      const joinMsg = [6, "MiniGame", "taixiuMd5Plugin", { cmd: 1105 }];
+      ws.send(JSON.stringify(joinMsg));
+      console.log("Join room taixiuMd5Plugin sent");
+    }, 1000);
+
+    startPing(ws);
+  });
+
+  ws.on("message", (msg) => {
+    try {
+      const data = JSON.parse(msg);
+      if (Array.isArray(data) && typeof data[1] === "object") {
+        if (data[1].cmd === 1103) {
+          handleResult(data[1]);
+        }
+      }
+    } catch {}
+  });
+
+  ws.on("close", () => {
+    console.log("WebSocket closed, reconnecting in 5s...");
+    setTimeout(connectWS, 5000);
+  });
+
+  ws.on("error", (err) => {
+    console.log("WebSocket error:", err);
+  });
+}
+
+connectWS();
+
+// ===== API GET =====
+const app = express();
+app.use(cors());
+
+app.get("/api/ketqua", (req, res) => {
+  if (lastResult) {
+    res.json(lastResult);
+  } else {
+    res.json({ status: "chưa có dữ liệu" });
+  }
+});
+
+const PORT = process.env.PORT || 11000;
+app.listen(PORT, () => {
+  console.log(`API server running at http://localhost:${PORT}`);
+});
