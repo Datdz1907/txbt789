@@ -1,27 +1,27 @@
+# update_model.py
 import sys
-import os
 import joblib
+import numpy as np
 from sklearn.linear_model import SGDClassifier
+import os
 
-MODEL_FILE = "model5.pkl"
+def encode(seq):
+    return [1 if ch == "T" else 0 for ch in seq]
 
-seq = sys.argv[1].strip().upper()
-label = int(sys.argv[2])  # 1 = Tài, 0 = Xỉu
+MODEL_FILE = "model.pkl"
 
-# Chuyển chuỗi TX thành vector
-X_new = [[1 if c == "T" else 0 for c in seq]]
-y_new = [label]
+seq = sys.argv[1]
+label = int(sys.argv[2])  # 1 = đúng (Tài), 0 = sai (Xỉu)
 
-# Tải model nếu có, nếu không thì tạo mới
+X_new = np.array([encode(seq)])
+y_new = np.array([label])
+
 if os.path.exists(MODEL_FILE):
     model = joblib.load(MODEL_FILE)
 else:
-    model = SGDClassifier(loss="log")
-    # cần init classes cho partial_fit
-    model.partial_fit([[0,0,0,0,0]], [0], classes=[0, 1])
+    model = SGDClassifier(loss="log_loss", max_iter=1000, tol=1e-3)
 
-# Cập nhật model với dữ liệu mới
-model.partial_fit(X_new, y_new)
+# partial_fit cần biết classes ngay từ lần đầu
+model.partial_fit(X_new, y_new, classes=[0, 1])
 
-# Lưu lại
 joblib.dump(model, MODEL_FILE)
