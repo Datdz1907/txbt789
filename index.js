@@ -94,6 +94,19 @@ function handleResult(data) {
   console.log(
     `Thống kê đúng/sai: Đúng = ${thongKeChiTiet.dung} | Sai = ${thongKeChiTiet.sai}`
   );
+
+  // === PHẦN TỰ HỌC THÊM VÀO ===
+  if (lichSuKetQua.length >= 5) {
+    const seq = lichSuKetQua.slice(-5).join("");
+    const label = ket_qua === "Tài" ? 1 : 0;
+    try {
+      execSync(`python3 update_model.py ${seq} ${label}`);
+      console.log(`Đã cập nhật model với dữ liệu: ${seq} -> ${ket_qua}`);
+    } catch (e) {
+      console.error("Lỗi khi cập nhật model:", e);
+    }
+  }
+  // ============================
 }
 
 // ===== WEBSOCKET =====
