@@ -1,19 +1,8 @@
 {
-  "name": "bit789",
-  "version": "1.0.0",
-  "type": "module",
   "dependencies": {
-    "brain.js": "^2.0.0-beta.24",
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "ws": "^8.18.3"
-  },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "express": "^4.19.2",
+  "ws": "^8.17.0",
+  "cors": "^2.8.5",
+  "synaptic": "^1.1.4"
 }
+  }
