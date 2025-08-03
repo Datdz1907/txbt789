@@ -1,5 +1,2 @@
-python-telegram-bot
-xgboost
-pandas
-numpy
-matplotlib
+joblib
+scikit-learn
