@@ -36,7 +36,7 @@ let lichSuKetQua = [];
 let thongKeChiTiet = { dung: 0, sai: 0 };
 let patternData = "";
 
-// Đọc file pattern.txt lúc khởi động
+// Đọc file pattern.txt
 try {
   patternData = fs.readFileSync("pattern.txt", "utf8").replace(/\s+/g, "");
   console.log(`Đã load pattern.txt (${patternData.length} ký tự)`);
@@ -44,31 +44,45 @@ try {
   console.error("Không đọc được file pattern.txt:", err);
 }
 
-// ===== DỰ ĐOÁN BẰNG PATTERN =====
-function duDoanBangPattern(history) {
-  if (history.length < 4 || !patternData) {
-    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
-  }
-
-  const last4 = history.slice(-4).join("");
+// ===== DỰ ĐOÁN THEO PATTERN VỚI CHIỀU DÀI LINH HOẠT =====
+function timTheoDoDai(history, doDai) {
+  if (history.length < doDai) return null;
+  const seq = history.slice(-doDai).join("");
   let countT = 0;
   let countX = 0;
 
-  for (let i = 0; i < patternData.length - 4; i++) {
-    const seq4 = patternData.substr(i, 4);
-    const next = patternData[i + 4];
-    if (seq4 === last4 && next) {
+  for (let i = 0; i < patternData.length - doDai; i++) {
+    const matchSeq = patternData.substr(i, doDai);
+    const next = patternData[i + doDai];
+    if (matchSeq === seq && next) {
       if (next === "T") countT++;
       if (next === "X") countX++;
     }
   }
 
-  if (countT === 0 && countX === 0) {
+  if (countT === 0 && countX === 0) return null;
+  return { countT, countX };
+}
+
+function duDoanBangPattern(history) {
+  if (history.length < 4 || !patternData) {
     return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
   }
 
-  const duDoan = countT >= countX ? "Tài" : "Xỉu";
+  // Thử từ dài nhất 6, sau đó 5, cuối cùng là 4
+  let ketQuaDem =
+    timTheoDoDai(history, 6) ||
+    timTheoDoDai(history, 5) ||
+    timTheoDoDai(history, 4);
+
+  if (!ketQuaDem) {
+    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
+  }
+
+  const { countT, countX } = ketQuaDem;
   console.log(`Pattern thống kê: T=${countT}, X=${countX}`);
+
+  const duDoan = countT >= countX ? "Tài" : "Xỉu";
   return { duDoan, method: "pattern" };
 }
 
