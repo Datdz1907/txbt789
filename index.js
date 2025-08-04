@@ -4,6 +4,8 @@ import cors from "cors";
 import fs from "fs";
 import { execSync } from "child_process";
 
+const PYTHON_BIN = ".venv/bin/python3"; // Dùng python trong venv
+
 // ===== CONFIG =====
 const WS_URL =
   "wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==";
@@ -43,17 +45,20 @@ function duDoanBangModel(history) {
   }
   const seq = history.slice(-5).join("");
   try {
-    const output = execSync(`.venv/bin/python3 predict5.py ${seq}`).toString().trim();
-
-    // ===== ĐẢO NGƯỢC KẾT QUẢ Ở ĐÂY =====
-    let duDoanDaoNguoc = output;
-    if (output === "Tài") duDoanDaoNguoc = "Xỉu";
-    else if (output === "Xỉu") duDoanDaoNguoc = "Tài";
-
-    return { duDoan: duDoanDaoNguoc, method: "model" };
+    const output = execSync(`${PYTHON_BIN} predict5.py ${seq}`).toString().trim();
+    return { duDoan: output, method: "model" };
   } catch (err) {
     console.error("Lỗi khi gọi Python:", err);
     return { duDoan: "Chưa đủ dữ liệu", method: "model" };
+  }
+}
+
+// ===== CẬP NHẬT MODEL (TỰ HỌC) =====
+function capNhatModel(seq, label) {
+  try {
+    execSync(`${PYTHON_BIN} update_model.py ${seq} ${label}`);
+  } catch (err) {
+    console.error("Lỗi khi cập nhật model:", err);
   }
 }
 
@@ -70,16 +75,11 @@ function handleResult(data) {
   const tong = d1 + d2 + d3;
   const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
 
-  // Nếu phiên này đã xử lý thì bỏ qua (tránh đếm trùng)
-  if (lastResult && lastResult.phien === phien) {
-    return;
-  }
-
   // Lưu lịch sử
   lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
   if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
 
-  // Dự đoán bằng model
+  // Dự đoán
   const { duDoan, method } = duDoanBangModel(lichSuKetQua);
 
   // Kiểm tra đúng/sai
@@ -87,6 +87,11 @@ function handleResult(data) {
   if (duDoan !== "Chưa đủ dữ liệu") {
     if (dung) thongKeChiTiet.dung++;
     else thongKeChiTiet.sai++;
+
+    // Tự học
+    const seq = lichSuKetQua.slice(-5).join("");
+    const label = dung ? 1 : 0;
+    capNhatModel(seq, label);
   }
 
   lastResult = {
@@ -166,7 +171,7 @@ app.get("/api/ketqua", (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 11000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`API server running at http://localhost:${PORT}`);
 });
