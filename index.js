@@ -36,9 +36,6 @@ let lastResult = null;
 let lichSuKetQua = [];
 let thongKeChiTiet = { dung: 0, sai: 0 };
 
-// ===== ĐƯỜNG DẪN PYTHON TRONG VENV =====
-const PYTHON = ".venv/bin/python3";
-
 // ===== DỰ ĐOÁN BẰNG MODEL 5 KÝ TỰ =====
 function duDoanBangModel(history) {
   if (history.length < 5) {
@@ -46,22 +43,17 @@ function duDoanBangModel(history) {
   }
   const seq = history.slice(-5).join("");
   try {
-    const output = execSync(`${PYTHON} predict5.py ${seq}`).toString().trim();
-    return { duDoan: output, method: "model" };
+    const output = execSync(`python3 predict5.py ${seq}`).toString().trim();
+
+    // ===== ĐẢO NGƯỢC KẾT QUẢ Ở ĐÂY =====
+    let duDoanDaoNguoc = output;
+    if (output === "Tài") duDoanDaoNguoc = "Xỉu";
+    else if (output === "Xỉu") duDoanDaoNguoc = "Tài";
+
+    return { duDoan: duDoanDaoNguoc, method: "model" };
   } catch (err) {
     console.error("Lỗi khi gọi Python:", err);
     return { duDoan: "Chưa đủ dữ liệu", method: "model" };
-  }
-}
-
-// ===== CẬP NHẬT MODEL (TỰ HỌC) =====
-function capNhatModel(history, label) {
-  if (history.length < 5) return;
-  const seq = history.slice(-5).join("");
-  try {
-    execSync(`${PYTHON} update_model.py ${seq} ${label}`);
-  } catch (err) {
-    console.error("Lỗi khi cập nhật model:", err);
   }
 }
 
@@ -78,11 +70,16 @@ function handleResult(data) {
   const tong = d1 + d2 + d3;
   const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
 
+  // Nếu phiên này đã xử lý thì bỏ qua (tránh đếm trùng)
+  if (lastResult && lastResult.phien === phien) {
+    return;
+  }
+
   // Lưu lịch sử
   lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
   if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
 
-  // Dự đoán chỉ bằng model
+  // Dự đoán bằng model
   const { duDoan, method } = duDoanBangModel(lichSuKetQua);
 
   // Kiểm tra đúng/sai
@@ -91,9 +88,6 @@ function handleResult(data) {
     if (dung) thongKeChiTiet.dung++;
     else thongKeChiTiet.sai++;
   }
-
-  // Tự học: cập nhật model bằng kết quả thật
-  capNhatModel(lichSuKetQua, ket_qua === "Tài" ? 1 : 0);
 
   lastResult = {
     phien,
