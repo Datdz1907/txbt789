@@ -43,7 +43,7 @@ function duDoanBangModel(history) {
   }
   const seq = history.slice(-5).join("");
   try {
-    const output = execSync(`python3 predict5.py ${seq}`).toString().trim();
+    const output = execSync(`.venv/bin/python3 predict5.py ${seq}`).toString().trim();
 
     // ===== ĐẢO NGƯỢC KẾT QUẢ Ở ĐÂY =====
     let duDoanDaoNguoc = output;
