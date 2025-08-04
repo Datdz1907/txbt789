@@ -1,6 +1,9 @@
+import express from "express";
 import WebSocket from "ws";
 import axios from "axios";
+import cors from "cors";
 
+// ===== CONFIG =====
 const WS_URL =
   "wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==";
 
@@ -27,72 +30,104 @@ const HANDSHAKE = [
   },
 ];
 
-// Thuật toán MD5
+let lastResult = null;
+
+// ===== ALGORITHMS =====
 function algo1(md5) {
   const sum = md5
     .split("")
-    .map((c) => c.charCodeAt(0))
+    .map(c => c.charCodeAt(0))
     .reduce((a, b) => a + b, 0);
-  return sum % 2 === 0 ? "tài" : "xỉu";
+  return sum % 2 === 0 ? "Tài" : "Xỉu";
 }
 
 function algo3(md5) {
   const digits = md5.replace(/[a-f]/gi, "");
   const digitSum = digits.split("").reduce((a, b) => a + parseInt(b), 0);
-  return digitSum % 2 === 0 ? "xỉu" : "tài";
+  return digitSum % 2 === 0 ? "Xỉu" : "Tài";
 }
 
 function algo5(md5) {
-  const ascii = [...md5].map((c) => c.charCodeAt(0));
+  const ascii = [...md5].map(c => c.charCodeAt(0));
   const score = (ascii[0] + ascii[ascii.length - 1]) % 3;
-  return score === 0 ? "xỉu" : "tài";
+  return score === 0 ? "Xỉu" : "Tài";
 }
 
-function voteResult(results) {
-  const count = { tài: 0, xỉu: 0 };
-  results.forEach((r) => count[r]++);
-  return count["tài"] > count["xỉu"] ? "xỉu" : "tài";
-}
+// ===== HANDLE DATA =====
+function handleResult(data) {
+  const md5 = data.rS;
+  const sid = data.sid;
 
-function sendToAPI(md5, ketqua) {
+  const kq1 = algo1(md5);
+  const kq2 = algo3(md5);
+  const kq3 = algo5(md5);
+
+  const counts = { Tài: 0, Xỉu: 0 };
+  [kq1, kq2, kq3].forEach(k => counts[k]++);
+
+  let vote = counts["Tài"] > counts["Xỉu"] ? "Tài" : "Xỉu";
+  let nguoc = vote === "Tài" ? "Xỉu" : "Tài";
+
+  lastResult = {
+    phien: sid,
+    md5: md5,
+    du_doan: nguoc,
+  };
+
+  console.log("✅ Dự đoán:", lastResult);
+
   axios
-    .post("https://concacbit789autovip.onrender.com/api/ketqua", {
-      md5,
-      ketqua,
-    })
-    .then(() => console.log("✅ Đã gửi kết quả lên API:", { md5, ketqua }))
-    .catch((err) => console.error("❌ Lỗi gửi API:", err.message));
+    .post("http://localhost:11000/api/ketqua", lastResult)
+    .catch(err => console.log("❌ Gửi API lỗi:", err.message));
 }
 
-// Kết nối WebSocket
-const ws = new WebSocket(WS_URL);
+// ===== WEBSOCKET =====
+function connectWS() {
+  const ws = new WebSocket(WS_URL);
 
-ws.on("open", () => {
-  console.log("✅ WebSocket đã kết nối.");
-  ws.send(JSON.stringify(HANDSHAKE));
+  ws.on("open", () => {
+    console.log("🔌 WebSocket đã kết nối.");
+    ws.send(JSON.stringify(HANDSHAKE));
+  });
+
+  ws.on("message", (msg) => {
+    try {
+      const data = JSON.parse(msg);
+      if (Array.isArray(data) && data[1]?.cmd === 1102 && data[1]?.rS) {
+        handleResult(data[1]);
+      }
+    } catch (err) {
+      console.log("❌ Lỗi parse dữ liệu:", err.message);
+    }
+  });
+
+  ws.on("close", () => {
+    console.log("⚠️ Mất kết nối WebSocket. Thử lại sau 5s.");
+    setTimeout(connectWS, 5000);
+  });
+
+  ws.on("error", (err) => {
+    console.error("❌ WebSocket lỗi:", err.message);
+  });
+}
+connectWS();
+
+// ===== EXPRESS API =====
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get("/api/ketqua", (req, res) => {
+  if (lastResult) res.json(lastResult);
+  else res.json({ status: "Chưa có dữ liệu" });
 });
 
-ws.on("message", (data) => {
-  try {
-    const parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length === 2) {
-      const [, payload] = parsed;
-      if (payload && payload.cmd === 1102 && payload.rS) {
-        const md5 = payload.rS;
-        console.log("🧠 Nhận MD5:", md5);
+app.post("/api/ketqua", (req, res) => {
+  console.log("📦 POST từ client:", req.body);
+  res.json({ status: "Đã nhận" });
+});
 
-        const result1 = algo1(md5);
-        const result3 = algo3(md5);
-        const result5 = algo5(md5);
-
-        const voted = voteResult([result1, result3, result5]);
-
-        console.log("📤 Dự đoán:", voted, "| MD5:", md5);
-
-        sendToAPI(md5, voted);
-      }
-    }
-  } catch (err) {
-    console.error("❌ Lỗi xử lý gói:", err.message);
-  }
+const PORT = process.env.PORT || 11000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server chạy tại http://localhost:${PORT}`);
 });
