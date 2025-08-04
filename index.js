@@ -1,9 +1,6 @@
-import express from "express";
 import WebSocket from "ws";
-import cors from "cors";
-import fs from "fs";
+import axios from "axios";
 
-// ===== CONFIG =====
 const WS_URL =
   "wss://api.apibit.net/websocket?d=YW5CaGJXeGthMjA9fDI0ODl8MTc1NDEzNzM4OTUwOHw5OWMwNGQ5Zjg4YmZhOTE5MjgxMDI5NDgxODdhMWZkZXwzM2U5OGVjMDRmYWU4MTY5MzBmYjZjMjk1NjQ5MjE5MQ==";
 
@@ -30,167 +27,72 @@ const HANDSHAKE = [
   },
 ];
 
-// ===== BIẾN LƯU =====
-let lastResult = null;
-let lichSuKetQua = [];
-let thongKeChiTiet = { dung: 0, sai: 0 };
-
-// Load pattern từ file
-let PATTERN_DATA = "";
-try {
-  PATTERN_DATA = fs.readFileSync("pattern.txt", "utf8").trim();
-} catch (e) {
-  console.error("Không đọc được file pattern.txt");
+// Thuật toán MD5
+function algo1(md5) {
+  const sum = md5
+    .split("")
+    .map((c) => c.charCodeAt(0))
+    .reduce((a, b) => a + b, 0);
+  return sum % 2 === 0 ? "tài" : "xỉu";
 }
 
-// ===== DỰ ĐOÁN THEO PATTERN =====
-function duDoanBangPattern(history) {
-  if (history.length < 3) {
-    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
-  }
-
-  let seq = history.slice(-4).join("");
-  let len = 4;
-
-  // Nếu chuỗi 4 ký tự không tìm thấy thì fallback xuống 3 ký tự
-  let sub = PATTERN_DATA;
-  let counts = { T: 0, X: 0 };
-
-  function countNext(seq) {
-    let total = { T: 0, X: 0 };
-    for (let i = 0; i < sub.length - seq.length; i++) {
-      if (sub.substr(i, seq.length) === seq) {
-        const next = sub[i + seq.length];
-        if (next === "T") total.T++;
-        else if (next === "X") total.X++;
-      }
-    }
-    return total;
-  }
-
-  counts = countNext(seq);
-
-  if (counts.T === 0 && counts.X === 0) {
-    // fallback 3 ký tự
-    len = 3;
-    seq = history.slice(-3).join("");
-    counts = countNext(seq);
-  }
-
-  if (counts.T === 0 && counts.X === 0) {
-    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
-  }
-
-  const duDoan = counts.T >= counts.X ? "Tài" : "Xỉu";
-  console.log(`Pattern ${seq} => T:${counts.T} | X:${counts.X}`);
-  return { duDoan, method: "pattern" };
+function algo3(md5) {
+  const digits = md5.replace(/[a-f]/gi, "");
+  const digitSum = digits.split("").reduce((a, b) => a + parseInt(b), 0);
+  return digitSum % 2 === 0 ? "xỉu" : "tài";
 }
 
-// ===== XỬ LÝ KẾT QUẢ =====
-function handleResult(data) {
-  const rS = data.rS;
-  const match = rS.match(/#(\d+)/);
-  if (!match) return;
-
-  const phien = parseInt(match[1]);
-  const d1 = data.d1;
-  const d2 = data.d2;
-  const d3 = data.d3;
-  const tong = d1 + d2 + d3;
-  const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
-
-  // Lưu lịch sử (T = Tài, X = Xỉu)
-  lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
-  if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
-
-  const { duDoan, method } = duDoanBangPattern(lichSuKetQua);
-
-  // Cập nhật thống kê đúng/sai
-  if (duDoan !== "Chưa đủ dữ liệu") {
-    if (duDoan === ket_qua) {
-      thongKeChiTiet.dung++;
-    } else {
-      thongKeChiTiet.sai++;
-    }
-  }
-
-  lastResult = {
-    phien,
-    xuc_xac_1: d1,
-    xuc_xac_2: d2,
-    xuc_xac_3: d3,
-    tong,
-    ket_qua,
-    du_doan: duDoan,
-    method,
-  };
-
-  console.log("Cập nhật dữ liệu:", lastResult);
-  console.log(
-    `Thống kê đúng/sai: Đúng = ${thongKeChiTiet.dung} | Sai = ${thongKeChiTiet.sai}`
-  );
+function algo5(md5) {
+  const ascii = [...md5].map((c) => c.charCodeAt(0));
+  const score = (ascii[0] + ascii[ascii.length - 1]) % 3;
+  return score === 0 ? "xỉu" : "tài";
 }
 
-// ===== WEBSOCKET =====
-function startPing(ws) {
-  setInterval(() => {
-    const pingMsg = [7, "MiniGame", 8, Date.now()];
-    ws.send(JSON.stringify(pingMsg));
-  }, 5000);
+function voteResult(results) {
+  const count = { tài: 0, xỉu: 0 };
+  results.forEach((r) => count[r]++);
+  return count["tài"] > count["xỉu"] ? "xỉu" : "tài";
 }
 
-function connectWS() {
-  const ws = new WebSocket(WS_URL);
-
-  ws.on("open", () => {
-    console.log("WebSocket connected");
-    ws.send(JSON.stringify(HANDSHAKE));
-
-    setTimeout(() => {
-      const joinMsg = [6, "MiniGame", "taixiuMd5Plugin", { cmd: 1105 }];
-      ws.send(JSON.stringify(joinMsg));
-      console.log("Join room taixiuMd5Plugin sent");
-    }, 1000);
-
-    startPing(ws);
-  });
-
-  ws.on("message", (msg) => {
-    try {
-      const data = JSON.parse(msg);
-      if (Array.isArray(data) && typeof data[1] === "object") {
-        if (data[1].cmd === 1103) {
-          handleResult(data[1]);
-        }
-      }
-    } catch {}
-  });
-
-  ws.on("close", () => {
-    console.log("WebSocket closed, reconnecting in 5s...");
-    setTimeout(connectWS, 5000);
-  });
-
-  ws.on("error", (err) => {
-    console.log("WebSocket error:", err);
-  });
+function sendToAPI(md5, ketqua) {
+  axios
+    .post("https://concacbit789autovip.onrender.com/api/ketqua", {
+      md5,
+      ketqua,
+    })
+    .then(() => console.log("✅ Đã gửi kết quả lên API:", { md5, ketqua }))
+    .catch((err) => console.error("❌ Lỗi gửi API:", err.message));
 }
 
-connectWS();
+// Kết nối WebSocket
+const ws = new WebSocket(WS_URL);
 
-// ===== API GET =====
-const app = express();
-app.use(cors());
-
-app.get("/api/ketqua", (req, res) => {
-  if (lastResult) {
-    res.json(lastResult);
-  } else {
-    res.json({ status: "chưa có dữ liệu" });
-  }
+ws.on("open", () => {
+  console.log("✅ WebSocket đã kết nối.");
+  ws.send(JSON.stringify(HANDSHAKE));
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`API server running at http://localhost:${PORT}`);
+ws.on("message", (data) => {
+  try {
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed) && parsed.length === 2) {
+      const [, payload] = parsed;
+      if (payload && payload.cmd === 1102 && payload.rS) {
+        const md5 = payload.rS;
+        console.log("🧠 Nhận MD5:", md5);
+
+        const result1 = algo1(md5);
+        const result3 = algo3(md5);
+        const result5 = algo5(md5);
+
+        const voted = voteResult([result1, result3, result5]);
+
+        console.log("📤 Dự đoán:", voted, "| MD5:", md5);
+
+        sendToAPI(md5, voted);
+      }
+    }
+  } catch (err) {
+    console.error("❌ Lỗi xử lý gói:", err.message);
+  }
 });
