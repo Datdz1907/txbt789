@@ -2,9 +2,6 @@ import express from "express";
 import WebSocket from "ws";
 import cors from "cors";
 import fs from "fs";
-import { execSync } from "child_process";
-
-const PYTHON_BIN = ".venv/bin/python3"; // Dùng python trong venv
 
 // ===== CONFIG =====
 const WS_URL =
@@ -37,29 +34,42 @@ const HANDSHAKE = [
 let lastResult = null;
 let lichSuKetQua = [];
 let thongKeChiTiet = { dung: 0, sai: 0 };
+let patternData = "";
 
-// ===== DỰ ĐOÁN BẰNG MODEL 5 KÝ TỰ =====
-function duDoanBangModel(history) {
-  if (history.length < 5) {
-    return { duDoan: "Chưa đủ dữ liệu", method: "model" };
-  }
-  const seq = history.slice(-5).join("");
-  try {
-    const output = execSync(`${PYTHON_BIN} predict5.py ${seq}`).toString().trim();
-    return { duDoan: output, method: "model" };
-  } catch (err) {
-    console.error("Lỗi khi gọi Python:", err);
-    return { duDoan: "Chưa đủ dữ liệu", method: "model" };
-  }
+// Đọc file pattern.txt lúc khởi động
+try {
+  patternData = fs.readFileSync("pattern.txt", "utf8").replace(/\s+/g, "");
+  console.log(`Đã load pattern.txt (${patternData.length} ký tự)`);
+} catch (err) {
+  console.error("Không đọc được file pattern.txt:", err);
 }
 
-// ===== CẬP NHẬT MODEL (TỰ HỌC) =====
-function capNhatModel(seq, label) {
-  try {
-    execSync(`${PYTHON_BIN} update_model.py ${seq} ${label}`);
-  } catch (err) {
-    console.error("Lỗi khi cập nhật model:", err);
+// ===== DỰ ĐOÁN BẰNG PATTERN =====
+function duDoanBangPattern(history) {
+  if (history.length < 4 || !patternData) {
+    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
   }
+
+  const last4 = history.slice(-4).join("");
+  let countT = 0;
+  let countX = 0;
+
+  for (let i = 0; i < patternData.length - 4; i++) {
+    const seq4 = patternData.substr(i, 4);
+    const next = patternData[i + 4];
+    if (seq4 === last4 && next) {
+      if (next === "T") countT++;
+      if (next === "X") countX++;
+    }
+  }
+
+  if (countT === 0 && countX === 0) {
+    return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
+  }
+
+  const duDoan = countT >= countX ? "Tài" : "Xỉu";
+  console.log(`Pattern thống kê: T=${countT}, X=${countX}`);
+  return { duDoan, method: "pattern" };
 }
 
 // ===== XỬ LÝ KẾT QUẢ =====
@@ -79,19 +89,14 @@ function handleResult(data) {
   lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
   if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
 
-  // Dự đoán
-  const { duDoan, method } = duDoanBangModel(lichSuKetQua);
+  // Dự đoán bằng pattern
+  const { duDoan, method } = duDoanBangPattern(lichSuKetQua);
 
   // Kiểm tra đúng/sai
   const dung = duDoan !== "Chưa đủ dữ liệu" && duDoan === ket_qua;
   if (duDoan !== "Chưa đủ dữ liệu") {
     if (dung) thongKeChiTiet.dung++;
     else thongKeChiTiet.sai++;
-
-    // Tự học
-    const seq = lichSuKetQua.slice(-5).join("");
-    const label = dung ? 1 : 0;
-    capNhatModel(seq, label);
   }
 
   lastResult = {
