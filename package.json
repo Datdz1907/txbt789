@@ -2,10 +2,12 @@
   "name": "txbt789",
   "version": "1.0.0",
   "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "express": "^4.19.2",
-    "ws": "^8.17.0",
-    "cors": "^2.8.5",
-    "synaptic": "^1.1.4"
+    "axios": "^1.6.8",
+    "ws": "^8.13.0"
   }
 }
