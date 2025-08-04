@@ -34,55 +34,55 @@ const HANDSHAKE = [
 let lastResult = null;
 let lichSuKetQua = [];
 let thongKeChiTiet = { dung: 0, sai: 0 };
-let patternData = "";
 
-// Đọc file pattern.txt
+// Load pattern từ file
+let PATTERN_DATA = "";
 try {
-  patternData = fs.readFileSync("pattern.txt", "utf8").replace(/\s+/g, "");
-  console.log(`Đã load pattern.txt (${patternData.length} ký tự)`);
-} catch (err) {
-  console.error("Không đọc được file pattern.txt:", err);
+  PATTERN_DATA = fs.readFileSync("pattern.txt", "utf8").trim();
+} catch (e) {
+  console.error("Không đọc được file pattern.txt");
 }
 
-// ===== DỰ ĐOÁN THEO PATTERN VỚI CHIỀU DÀI LINH HOẠT =====
-function timTheoDoDai(history, doDai) {
-  if (history.length < doDai) return null;
-  const seq = history.slice(-doDai).join("");
-  let countT = 0;
-  let countX = 0;
-
-  for (let i = 0; i < patternData.length - doDai; i++) {
-    const matchSeq = patternData.substr(i, doDai);
-    const next = patternData[i + doDai];
-    if (matchSeq === seq && next) {
-      if (next === "T") countT++;
-      if (next === "X") countX++;
-    }
-  }
-
-  if (countT === 0 && countX === 0) return null;
-  return { countT, countX };
-}
-
+// ===== DỰ ĐOÁN THEO PATTERN =====
 function duDoanBangPattern(history) {
-  if (history.length < 4 || !patternData) {
+  if (history.length < 3) {
     return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
   }
 
-  // Thử từ dài nhất 6, sau đó 5, cuối cùng là 4
-  let ketQuaDem =
-    timTheoDoDai(history, 6) ||
-    timTheoDoDai(history, 5) ||
-    timTheoDoDai(history, 4);
+  let seq = history.slice(-4).join("");
+  let len = 4;
 
-  if (!ketQuaDem) {
+  // Nếu chuỗi 4 ký tự không tìm thấy thì fallback xuống 3 ký tự
+  let sub = PATTERN_DATA;
+  let counts = { T: 0, X: 0 };
+
+  function countNext(seq) {
+    let total = { T: 0, X: 0 };
+    for (let i = 0; i < sub.length - seq.length; i++) {
+      if (sub.substr(i, seq.length) === seq) {
+        const next = sub[i + seq.length];
+        if (next === "T") total.T++;
+        else if (next === "X") total.X++;
+      }
+    }
+    return total;
+  }
+
+  counts = countNext(seq);
+
+  if (counts.T === 0 && counts.X === 0) {
+    // fallback 3 ký tự
+    len = 3;
+    seq = history.slice(-3).join("");
+    counts = countNext(seq);
+  }
+
+  if (counts.T === 0 && counts.X === 0) {
     return { duDoan: "Chưa đủ dữ liệu", method: "pattern" };
   }
 
-  const { countT, countX } = ketQuaDem;
-  console.log(`Pattern thống kê: T=${countT}, X=${countX}`);
-
-  const duDoan = countT >= countX ? "Tài" : "Xỉu";
+  const duDoan = counts.T >= counts.X ? "Tài" : "Xỉu";
+  console.log(`Pattern ${seq} => T:${counts.T} | X:${counts.X}`);
   return { duDoan, method: "pattern" };
 }
 
@@ -99,18 +99,19 @@ function handleResult(data) {
   const tong = d1 + d2 + d3;
   const ket_qua = tong >= 11 ? "Tài" : "Xỉu";
 
-  // Lưu lịch sử
+  // Lưu lịch sử (T = Tài, X = Xỉu)
   lichSuKetQua.push(ket_qua === "Tài" ? "T" : "X");
   if (lichSuKetQua.length > 1000) lichSuKetQua.shift();
 
-  // Dự đoán bằng pattern
   const { duDoan, method } = duDoanBangPattern(lichSuKetQua);
 
-  // Kiểm tra đúng/sai
-  const dung = duDoan !== "Chưa đủ dữ liệu" && duDoan === ket_qua;
+  // Cập nhật thống kê đúng/sai
   if (duDoan !== "Chưa đủ dữ liệu") {
-    if (dung) thongKeChiTiet.dung++;
-    else thongKeChiTiet.sai++;
+    if (duDoan === ket_qua) {
+      thongKeChiTiet.dung++;
+    } else {
+      thongKeChiTiet.sai++;
+    }
   }
 
   lastResult = {
@@ -122,7 +123,6 @@ function handleResult(data) {
     ket_qua,
     du_doan: duDoan,
     method,
-    dudoan_dung: dung,
   };
 
   console.log("Cập nhật dữ liệu:", lastResult);
